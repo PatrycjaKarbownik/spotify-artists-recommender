@@ -33,13 +33,21 @@ class Artist:
         acousticnesses = list(map(lambda feature: feature.acousticness, features))
         instrumentalnesses = list(map(lambda feature: feature.instrumentalness, features))
         valences = list(map(lambda feature: feature.valence, features))
+        loudnesses = list(map(lambda feature: feature.loudness, features))
+        modes = list(map(lambda feature: feature.mode, features))
+        tempos = list(map(lambda feature: feature.tempo, features))
+        time_signatures = list(map(lambda feature: feature.time_signature, features))
 
         dictionary = {
             "danceability": statistics.mean(danceabilities),
             "energy": statistics.mean(energies),
             "acousticness": statistics.mean(acousticnesses),
             "instrumentalness": statistics.mean(instrumentalnesses),
-            "valence": statistics.mean(valences)
+            "valence": statistics.mean(valences),
+            "loudness": statistics.mean(loudnesses),
+            "mode": statistics.mean(modes),
+            "tempo": statistics.mean(tempos),
+            "time_signature": statistics.mean(time_signatures)
         }
 
         self.avg_track_features = Features(**dictionary)

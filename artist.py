@@ -1,16 +1,14 @@
 import statistics
-from features import Features
+
+from track import Features
 
 
 class Artist:
-    def __init__(self, name, spotify_id, spotify):
-        self.name = name
+    def __init__(self, spotify_id, name):
         self.spotify_id = spotify_id
+        self.name = name
         self.tracks = []
         self.avg_track_features = None
-
-        self.spotify_id_related_artists = self.search_for_related_artists(spotify)
-        self.spotify_id_not_related_artists = self.search_for_unrelated_artists(spotify)
 
     def set_tracks(self, tracks):
         self.tracks = tracks
@@ -18,13 +16,13 @@ class Artist:
     def get_tracks(self):
         return self.tracks
 
-    def search_for_related_artists(self, spotify):
-        result = map(lambda artist: artist['id'], spotify.artist_related_artists(self.spotify_id)['artists'])
-        return list(result)
+    def search_related_artists(self, spotify, artists_db):
+        # todo search intersection (spotify.artist_related_artists & artists_db)
+        # result = map(lambda artist: artist['id'], spotify.artist_related_artists(self.spotify_id)['artists'])
+        pass
 
-    def search_for_unrelated_artists(self, spotify):
-        # todo we are looking for unrelated artists idk how
-        return []
+    def search_unrelated_artists(self, spotify, artists_db):
+        pass
 
     def calc_avg_track_features(self):
         features = list(map(lambda track: track.features, self.tracks))

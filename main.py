@@ -1,4 +1,4 @@
-from spotify import connect_to_spotify, get_artist_tracks, get_artist_list
+from spotify import connect_to_spotify, get_artist_tracks, get_artists_id_list
 
 
 def add_tracks(spotify, artists):
@@ -6,6 +6,12 @@ def add_tracks(spotify, artists):
         tracks = get_artist_tracks(spotify, artist)
         artist.set_tracks(tracks)
         artist.calc_avg_track_features()
+
+
+def add_related_and_unrelated_artists(spotify, artists_db):
+    for artist in artists_db:
+        artist.search_related_artists(spotify, artists_db)
+        artist.search_unrelated_artists(spotify, artists_db)
 
 
 def find_correlation(artists):
@@ -21,12 +27,13 @@ def predict_recommendations(artist_name, artists, features):
 if __name__ == '__main__':
     spotify = connect_to_spotify()
 
-    artists = get_artist_list(spotify)
-    add_tracks(spotify, artists)
-    features = find_correlation(artists)
+    artists_database = get_artists_id_list(spotify, seed="Kult")
+    add_tracks(spotify, artists_database)
+    add_related_and_unrelated_artists(spotify, artists_database)
+    # features = find_correlation(artists_database)
 
-    for i in range(5):
-        artist_name = input('Enter artist name: ')
-        recommendations = predict_recommendations(artist_name, artists, features)
-        for recommendation in recommendations:
-            print(recommendation)
+    # for i in range(5):
+    #     artist_name = input('Enter artist name: ')
+    #     recommendations = predict_recommendations(artist_name, artists, features)
+    #     for recommendation in recommendations:
+    #         print(recommendation)

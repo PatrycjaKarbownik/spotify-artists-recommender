@@ -1,3 +1,7 @@
+import statistics
+from features import Features
+
+
 class Artist:
     def __init__(self, name, spotify_id, spotify):
         self.name = name
@@ -23,5 +27,19 @@ class Artist:
         return []
 
     def calc_avg_track_features(self):
-        # todo self.avg_track_features = ...
-        pass
+        features = list(map(lambda track: track.features, self.tracks))
+        danceabilities = list(map(lambda feature: feature.danceability, features))
+        energies = list(map(lambda feature: feature.energy, features))
+        acousticnesses = list(map(lambda feature: feature.acousticness, features))
+        instrumentalnesses = list(map(lambda feature: feature.instrumentalness, features))
+        valences = list(map(lambda feature: feature.valence, features))
+
+        dictionary = {
+            "danceability": statistics.mean(danceabilities),
+            "energy": statistics.mean(energies),
+            "acousticness": statistics.mean(acousticnesses),
+            "instrumentalness": statistics.mean(instrumentalnesses),
+            "valence": statistics.mean(valences)
+        }
+
+        self.avg_track_features = Features(**dictionary)

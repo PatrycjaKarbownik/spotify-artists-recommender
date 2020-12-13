@@ -14,21 +14,7 @@ def connect_to_spotify():
 def get_artist_list(spotify):
     # todo get artist list from spotify idk how (use class Artist from artist.py)
     # it should be our "artist database" so len(artist_list) should be ~ 10^4, 10^5
-    result = []
-
-    searching_result = spotify.search(q='Nightwish', type='artist', limit=1)
-    tmp = searching_result['artists']['items'][0]
-    result.append(Artist(tmp['name'], tmp['id'], spotify))
-
-    searching_result = spotify.search(q='Epica', type='artist', limit=1)
-    tmp = searching_result['artists']['items'][0]
-    result.append(Artist(tmp['name'], tmp['id'], spotify))
-
-    searching_result = spotify.search(q='ReVamp', type='artist', limit=1)
-    tmp = searching_result['artists']['items'][0]
-    result.append(Artist(tmp['name'], tmp['id'], spotify))
-
-    return result
+    return []
 
 
 def get_artist_tracks(spotify, artist):

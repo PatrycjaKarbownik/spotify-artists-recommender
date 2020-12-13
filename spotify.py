@@ -1,6 +1,10 @@
 import spotipy
 import config
+from artist import Artist
+from track import Track
 from spotipy import SpotifyClientCredentials
+
+NUMBER_OF_TOP_TRACKS = 2
 
 
 def connect_to_spotify():
@@ -14,13 +18,15 @@ def get_artist_list(spotify):
 
 
 def get_artist_tracks(spotify, artist):
-    # todo return list of artist tracks - idk maybe all, maybe top 10, the newest (use class Track from track.py)
-    return []
+    track_ids, track_names = [], []
+
+    for item in spotify.artist_top_tracks(artist.spotify_id)['tracks'][:NUMBER_OF_TOP_TRACKS]:
+        track_ids.append(item['id'])
+        track_names.append(item['name'])
 
 
-# an example:
-# track_features = get_track_features(spotify, 'Prosto')
-# track = Track(**track_features)
-def get_track_features(spotify, name):
-    track_id = spotify.search(q=name, type='track')['tracks']['items'][0]['id']
-    return spotify.audio_features(tracks=track_id)[0]
+    result = []
+    for (name, features) in zip(track_names, spotify.audio_features(tracks=track_ids)):
+        result.append(Track(name, **features))
+
+    return result

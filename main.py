@@ -28,5 +28,5 @@ if __name__ == '__main__':
     for i in range(5):
         artist_name = input('Enter artist name: ')
         recommendations = predict_recommendations(artist_name, artists, features)
-        for recomendation in recommendations:
-            print(recomendation)
+        for recommendation in recommendations:
+            print(recommendation)

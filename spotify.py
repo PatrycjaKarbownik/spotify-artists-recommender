@@ -16,7 +16,7 @@ def connect_to_spotify():
 
 def get_artists_id_list(spotify, seed):
     seed_id = spotify.search(q=seed, type='artist')['artists']['items'][0]['id']
-    artists, artists_db, queue = dict(), list(), Queue()
+    artists, artists_db, artists_ids, queue = dict(), list(), list(), Queue()
 
     queue.put(seed_id)
     while queue.not_empty and len(artists) < DATABASE_SIZE:
@@ -29,8 +29,9 @@ def get_artists_id_list(spotify, seed):
 
     for id in artists:
         artists_db.append(Artist(id, artists[id]))
+        artists_ids.append(id)
 
-    return artists_db
+    return artists_db, artists_ids
 
 
 def get_artist_tracks(spotify, artist):

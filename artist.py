@@ -27,7 +27,8 @@ class Artist:
             related_artists.append(related['id'])
         self.related_artists = list(set(artists_ids) & set(related_artists))
 
-    def search_unrelated_artists(self, artists_ids):
+    def search_unrelated_artists(self, artists):
+        artists_ids = list(artists)
         shuffle(artists_ids)
         for artist_id in artists_ids:
             if artist_id not in self.related_artists:

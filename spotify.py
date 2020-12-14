@@ -1,10 +1,11 @@
 from queue import Queue
 
 import spotipy
+from spotipy import SpotifyClientCredentials
+
 import config
 from artist import Artist
 from track import Track
-from spotipy import SpotifyClientCredentials
 
 NUMBER_OF_TOP_TRACKS = 2
 DATABASE_SIZE = 30
@@ -16,7 +17,7 @@ def connect_to_spotify():
 
 def get_artists_id_list(spotify, seed):
     seed_id = spotify.search(q=seed, type='artist')['artists']['items'][0]['id']
-    artists, artists_db, artists_ids, queue = dict(), list(), list(), Queue()
+    artists, artists_db, queue = dict(), dict(), Queue()
 
     queue.put(seed_id)
     while queue.not_empty and len(artists) < DATABASE_SIZE:
@@ -28,10 +29,9 @@ def get_artists_id_list(spotify, seed):
                 queue.put(artist['id'])
 
     for id in artists:
-        artists_db.append(Artist(id, artists[id]))
-        artists_ids.append(id)
+        artists_db[id] = Artist(id, artists[id])
 
-    return artists_db, artists_ids
+    return artists_db
 
 
 def get_artist_tracks(spotify, artist):

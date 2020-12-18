@@ -14,6 +14,5 @@ class Features:
         self.valence = kwargs['valence']
         self.loudness = kwargs['loudness']
         self.mode = kwargs['mode']
-        # self.liveness = kwargs['liveness']  # to tracks filtering
         self.tempo = kwargs['tempo']
         self.time_signature = kwargs['time_signature']

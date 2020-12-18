@@ -1,7 +1,7 @@
 import statistics
 from random import shuffle
 
-from track import Features
+from src.track import Features
 
 UNRELATED_ARTISTS = 20
 

@@ -37,27 +37,11 @@ class Artist:
                     break
 
     def calc_avg_track_features(self):
-        features = list(map(lambda track: track.features, self.tracks))
-        danceabilities = list(map(lambda feature: feature.danceability, features))
-        energies = list(map(lambda feature: feature.energy, features))
-        acousticnesses = list(map(lambda feature: feature.acousticness, features))
-        instrumentalnesses = list(map(lambda feature: feature.instrumentalness, features))
-        valences = list(map(lambda feature: feature.valence, features))
-        loudnesses = list(map(lambda feature: feature.loudness, features))
-        modes = list(map(lambda feature: feature.mode, features))
-        tempos = list(map(lambda feature: feature.tempo, features))
-        time_signatures = list(map(lambda feature: feature.time_signature, features))
+        track_features = [track.features for track in self.tracks]
+        dictionary = {}
 
-        dictionary = {
-            "danceability": statistics.mean(danceabilities),
-            "energy": statistics.mean(energies),
-            "acousticness": statistics.mean(acousticnesses),
-            "instrumentalness": statistics.mean(instrumentalnesses),
-            "valence": statistics.mean(valences),
-            "loudness": statistics.mean(loudnesses),
-            "mode": statistics.mean(modes),
-            "tempo": statistics.mean(tempos),
-            "time_signature": statistics.mean(time_signatures)
-        }
+        for feature_name in Features.get_features_list():
+            feature_values = [getattr(features, feature_name) for features in track_features]
+            dictionary[feature_name] = statistics.mean(feature_values)
 
         self.avg_track_features = Features(**dictionary)

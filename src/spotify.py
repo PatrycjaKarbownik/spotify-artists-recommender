@@ -4,8 +4,8 @@ import spotipy
 from spotipy import SpotifyClientCredentials
 
 import config
-from artist import Artist
-from track import Track
+from src.artist import Artist
+from src.track import Track
 
 NUMBER_OF_TOP_TRACKS = 2
 DATABASE_SIZE = 30
@@ -42,3 +42,16 @@ def get_artist_tracks(spotify, artist):
         result.append(Track(name, **features))
 
     return result
+
+
+def add_tracks(spotify, artists_db):
+    for artist in artists_db.values():
+        tracks = get_artist_tracks(spotify, artist)
+        artist.set_tracks(tracks)
+        artist.calc_avg_track_features()
+
+
+def add_related_and_unrelated_artists(spotify, artists_db):
+    for artist in artists_db.values():
+        artist.search_related_artists(spotify, artists_db.keys())
+        artist.search_unrelated_artists(artists_db.keys())

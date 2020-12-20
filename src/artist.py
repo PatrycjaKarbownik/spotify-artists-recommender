@@ -38,10 +38,10 @@ class Artist:
 
     def calc_avg_track_features(self):
         track_features = [track.features for track in self.tracks]
-        dictionary = {}
+        features_averages = {}
 
         for feature_name in Features.get_features_list():
             feature_values = [getattr(features, feature_name) for features in track_features]
-            dictionary[feature_name] = statistics.mean(feature_values)
+            features_averages[feature_name] = statistics.mean(feature_values)
 
-        self.avg_track_features = Features(**dictionary)
+        self.avg_track_features = Features(**features_averages)

@@ -35,18 +35,19 @@ def get_relevant_features(artists_db):
 
 def calculate_features_deviations(artist, other_artists):
     artists_features_averages = [artist.avg_track_features for artist in other_artists]
-    dictionary = {}
+    features_deviations = {}
+
     for feature_name in Features.get_features_list():
         main_artist_feature_avg = getattr(artist.avg_track_features, feature_name)
         feature_averages = [getattr(features_averages, feature_name) for features_averages in artists_features_averages]
         deviation_list = [calculate_deviation(main_artist_feature_avg, value) for value in feature_averages]
-        dictionary[feature_name] = sum(deviation_list)
+        features_deviations[feature_name] = sum(deviation_list)
 
-    return Features(**dictionary)
+    return Features(**features_deviations)
 
 
-def calculate_deviation(minuend, subtrahend):
-    return (minuend - subtrahend) ** 2
+def calculate_deviation(value_1, value_2):
+    return (value_1 - value_2) ** 2
 
 
 def calc_sim(artist_1, artist_2, features):

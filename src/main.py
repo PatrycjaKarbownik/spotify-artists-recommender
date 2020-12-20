@@ -2,7 +2,7 @@ import os
 from random import random
 
 from src.db_operations import load_database, save_database
-from src.similarities import calc_sim, analyse_artists
+from src.similarities import calc_sim, get_relevant_features
 from src.spotify import connect_to_spotify, get_artists_id_list, add_tracks, add_related_and_unrelated_artists
 
 ARTISTS_DB_PATH = "artists_db/db"
@@ -45,10 +45,10 @@ if __name__ == '__main__':
         add_related_and_unrelated_artists(spotify, artists_database)
         save_database(artists_database, ARTISTS_DB_PATH)
 
-    features = analyse_artists(artists_database)
+    relevant_features = get_relevant_features(artists_database)
 
     for _ in range(MAIN_LOOP):
         artist_name = input('Enter artist name: ')
-        recommendations = predict_recommendations(spotify, artist_name, artists_database, features)
+        recommendations = predict_recommendations(spotify, artist_name, artists_database, relevant_features)
         for recommendation in recommendations:
             print(recommendation)

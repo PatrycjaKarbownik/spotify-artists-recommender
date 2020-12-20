@@ -7,8 +7,8 @@ import config
 from src.artist import Artist
 from src.track import Track
 
-NUMBER_OF_TOP_TRACKS = 2
-DATABASE_SIZE = 30
+NUMBER_OF_TOP_TRACKS = 10
+DATABASE_SIZE = 100
 
 
 def connect_to_spotify():

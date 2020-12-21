@@ -27,8 +27,9 @@ def get_relevant_features(artists_db):
 
     result = []
     for feature_name in Features.get_features_list():
-        if getattr(features_relevance, feature_name) > len(artists_db) * ARTISTS_THRESHOLD:
-            result.append(feature_name)
+        relevance = getattr(features_relevance, feature_name)
+        if relevance > len(artists_db) * ARTISTS_THRESHOLD:
+            result.append((feature_name, relevance / len(artists_db)))
 
     return result
 
@@ -46,9 +47,16 @@ def calculate_features_deviations(artist, other_artists):
     return Features(**features_deviations)
 
 
+def calculate_deviation_between_two_artists(artist_1, artist_2, features):
+    deviation_sum = 0
+
+    for feature in features:
+        artist_1_feat_value = getattr(artist_1.avg_track_features, feature[0])
+        artist_2_feat_value = getattr(artist_2.avg_track_features, feature[0])
+        deviation_sum += feature[1] * calculate_deviation(artist_1_feat_value, artist_2_feat_value)
+
+    return deviation_sum
+
+
 def calculate_deviation(value_1, value_2):
     return (value_1 - value_2) ** 2
-
-
-def calc_sim(artist_1, artist_2, features):
-    pass

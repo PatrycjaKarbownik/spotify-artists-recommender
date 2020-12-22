@@ -1,5 +1,5 @@
 import statistics
-from random import shuffle
+from random import sample
 
 from src.track import Features
 
@@ -18,9 +18,6 @@ class Artist:
     def set_tracks(self, tracks):
         self.tracks = tracks
 
-    def get_tracks(self):
-        return self.tracks
-
     def search_related_artists(self, spotify, artists_ids):
         related_artists = []
         for related in spotify.artist_related_artists(self.spotify_id)['artists']:
@@ -29,9 +26,11 @@ class Artist:
 
     def search_unrelated_artists(self, artists):
         artists_ids = list(artists)
-        shuffle(artists_ids)
-        for artist_id in artists_ids:
-            if artist_id not in self.related_artists:
+        index_list = sample(range(len(artists_ids)), len(self.related_artists) + UNRELATED_ARTISTS)
+
+        for idx in index_list:
+            artist_id = artists_ids[idx]
+            if artist_id not in self.related_artists and artist_id != self.spotify_id:
                 self.unrelated_artists.append(artist_id)
                 if len(self.unrelated_artists) == UNRELATED_ARTISTS:
                     break

@@ -1,3 +1,4 @@
+from datetime import datetime
 from queue import Queue
 
 import spotipy
@@ -16,6 +17,7 @@ def connect_to_spotify():
 
 
 def get_artists_id_list(spotify, seed):
+    print('Preparing database ' + str(datetime.now()))
     seed_id = spotify.search(q=seed, type='artist')['artists']['items'][0]['id']
     artists_db, queue = dict(), Queue()
 
@@ -45,13 +47,22 @@ def get_artist_tracks(spotify, artist):
 
 
 def add_tracks(spotify, artists_db):
+    print('Add tracks ' + str(datetime.now()))
     for artist in artists_db.values():
         tracks = get_artist_tracks(spotify, artist)
         artist.set_tracks(tracks)
-        artist.calc_avg_track_features()
 
 
 def add_related_and_unrelated_artists(spotify, artists_db):
+    print('Related & unrelated artists ' + str(datetime.now()))
     for artist in artists_db.values():
         artist.search_related_artists(spotify, artists_db.keys())
         artist.search_unrelated_artists(artists_db.keys())
+
+
+def prepare_artist_profile(spotify, artist_id, artist_name):
+    artist = Artist(artist_id, artist_name)
+    artist.set_tracks(get_artist_tracks(spotify, artist))
+    artist.calc_avg_track_features()
+
+    return artist

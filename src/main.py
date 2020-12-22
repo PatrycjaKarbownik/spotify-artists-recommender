@@ -1,13 +1,16 @@
 import os
-from random import random
-
 from src.db_operations import load_database, save_database
 from src.similarities import calculate_deviation_between_two_artists, get_relevant_features
-from src.spotify import connect_to_spotify, get_artists_id_list, add_tracks, add_related_and_unrelated_artists
+from src.spotify import connect_to_spotify, get_artists_id_list, add_tracks, add_related_and_unrelated_artists, \
+    prepare_artist_profile
 
 ARTISTS_DB_PATH = "artists_db/db"
 REC_LIST_SIZE = 10
-MAIN_LOOP = 5
+
+
+def calc_avg_track_features(artists_db):
+    for artist in artists_db.values():
+        artist.calc_avg_track_features()
 
 
 def predict_recommendations(spotify, artist_name, artists_db, relevant_features):
@@ -15,9 +18,7 @@ def predict_recommendations(spotify, artist_name, artists_db, relevant_features)
     if rec_artist_id in artists_db.keys():
         rec_artist = artists_db[rec_artist_id]
     else:
-        # rec_artist = spotify ...
-        # rec_artist = calc_artist_profile()
-        pass
+        rec_artist = prepare_artist_profile(spotify, rec_artist_id, artist_name)
 
     artists_similarities, rec = [], []
     for artist in artists_db.values():
@@ -44,11 +45,14 @@ if __name__ == '__main__':
         add_related_and_unrelated_artists(spotify, artists_database)
         save_database(artists_database, ARTISTS_DB_PATH)
 
+    calc_avg_track_features(artists_database)
     relevant_features = get_relevant_features(artists_database)
 
-    for _ in range(MAIN_LOOP):
-        print()
-        artist_name = input('Enter artist name: ')
-        recommendations = predict_recommendations(spotify, artist_name, artists_database, relevant_features)
-        for recommendation in recommendations:
-            print(recommendation)
+    while True:
+        artist_name = input('Enter artist name (or press Enter to exit): ')
+        if artist_name:
+            recommendations = predict_recommendations(spotify, artist_name, artists_database, relevant_features)
+            for recommendation in recommendations:
+                print(recommendation)
+        else:
+            break

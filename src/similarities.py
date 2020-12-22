@@ -9,8 +9,7 @@ def get_relevant_features(artists_db):
     features_relevance = Features()
     artist_counter = 0
 
-    for artist_id in artists_db.keys():
-        artist = artists_db[artist_id]
+    for artist in artists_db.values():
         if len(artist.related_artists) < MINIMUM_RELATED_ARTISTS:
             continue
         artist_counter += 1

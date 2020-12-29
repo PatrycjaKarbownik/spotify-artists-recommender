@@ -20,7 +20,7 @@ class Artist:
         self.tracks = tracks
 
     def search_related_artists(self, spotify, artists_main_ids, artists_supp):
-        related_artists, new_artists = [], []
+        related_artists = []
         for related in spotify.artist_related_artists(self.spotify_id)['artists']:
             related_artists.append((related['id'], related['name']))
         # related artists based on main db and spotify api query

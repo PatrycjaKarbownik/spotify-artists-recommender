@@ -46,8 +46,8 @@ if __name__ == '__main__':
         artists_database_main = get_artists_id_list(spotify, seed="Kult")
         artists_database_supp = add_related_and_unrelated_artists(spotify, artists_database_main)
         add_tracks(spotify, [artists_database_main, artists_database_supp])
-        save_databases([artists_database_main, artists_database_supp], [ARTISTS_DB_PATH_MAIN, ARTISTS_DB_PATH_SUPP])
         calc_avg_track_features([artists_database_main, artists_database_supp])
+        save_databases([artists_database_main, artists_database_supp], [ARTISTS_DB_PATH_MAIN, ARTISTS_DB_PATH_SUPP])
 
     relevant_features = get_relevant_features(artists_database_main, artists_database_supp)
 

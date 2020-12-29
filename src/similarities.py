@@ -18,7 +18,6 @@ def get_relevant_features(artists_db_main, artists_db_supp):
                 print('Houston, we have a problem!')
 
         unrelated_artists = [artists_db_main[spotify_id] for spotify_id in artist.unrelated_artists]
-
         related_artists_features = calculate_features_deviations(artist, related_artists)
         unrelated_artists_features = calculate_features_deviations(artist, unrelated_artists)
 

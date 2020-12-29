@@ -1,12 +1,17 @@
 import pickle
 
 
-def save_databases(artists_databases, files_paths):
-    for db_no in range(len(artists_databases)):
-        with open(files_paths[db_no], 'wb') as f:
-            pickle.dump(artists_databases[db_no], f)
+def save_database(artists_database, file_path):
+    with open(file_path, 'wb') as f:
+        pickle.dump(artists_database, f)
 
 
 def load_database(file_path):
     with open(file_path, 'rb') as f:
         return pickle.load(f)
+
+
+def calc_avg_track_features(artists_dbs):
+    for artists_db in artists_dbs:
+        for artist in artists_db.values():
+            artist.calc_avg_track_features()

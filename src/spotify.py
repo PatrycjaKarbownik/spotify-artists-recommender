@@ -46,18 +46,22 @@ def get_artist_tracks(spotify, artist):
     return result
 
 
-def add_tracks(spotify, artists_db):
+def add_tracks(spotify, artists_databases):
     print('Add tracks ' + str(datetime.now()))
-    for artist in artists_db.values():
-        tracks = get_artist_tracks(spotify, artist)
-        artist.set_tracks(tracks)
+    for artist_db in artists_databases:
+        for artist in artist_db.values():
+            tracks = get_artist_tracks(spotify, artist)
+            artist.set_tracks(tracks)
 
 
-def add_related_and_unrelated_artists(spotify, artists_db):
+def add_related_and_unrelated_artists(spotify, artists_db_main):
     print('Related & unrelated artists ' + str(datetime.now()))
-    for artist in artists_db.values():
-        artist.search_related_artists(spotify, artists_db.keys())
-        artist.search_unrelated_artists(artists_db.keys())
+    artists_db_supp = dict()
+    for artist in artists_db_main.values():
+        artist.search_related_artists(spotify, artists_db_main.keys(), artists_db_supp)
+        artist.search_unrelated_artists(artists_db_main.keys())
+
+    return artists_db_supp
 
 
 def prepare_artist_profile(spotify, artist_id, artist_name):

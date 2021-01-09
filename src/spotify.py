@@ -41,6 +41,8 @@ def get_artist_tracks(spotify, artist):
         track_names.append(item['name'])
 
     for (name, features) in zip(track_names, spotify.audio_features(tracks=track_ids)):
+        if features is None:
+            continue
         result.append(Track(name, **features))
 
     return result

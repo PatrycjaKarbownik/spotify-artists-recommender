@@ -4,20 +4,25 @@ FEATURES_THRESHOLD = -0.2
 ARTISTS_THRESHOLD = 0.7
 
 
-def get_relevant_features(artists_db_main, artists_db_supp):
+def get_features_relevance(artists_db_main, artists_db_supp):
     features_relevance = Features()
 
     for artist in artists_db_main.values():
-        related_artists = []
+        related_artists, unrelated_artists = [], []
         for spotify_id in artist.related_artists:
             if spotify_id in artists_db_main:
                 related_artists.append(artists_db_main[spotify_id])
             elif spotify_id in artists_db_supp:
                 related_artists.append(artists_db_supp[spotify_id])
             else:
-                print('Houston, we have a problem!')
+                print('[Artist with spotify_id {0} not found'.format(spotify_id))
 
-        unrelated_artists = [artists_db_main[spotify_id] for spotify_id in artist.unrelated_artists]
+        for spotify_id in artist.unrelated_artists:
+            if spotify_id in artists_db_main:
+                unrelated_artists.append(artists_db_main[spotify_id])
+            else:
+                print('[Artist with spotify_id {0} not found'.format(spotify_id))
+
         related_artists_features = calculate_features_deviations(artist, related_artists)
         unrelated_artists_features = calculate_features_deviations(artist, unrelated_artists)
 
@@ -27,6 +32,11 @@ def get_relevant_features(artists_db_main, artists_db_supp):
             if related_artists_deviation - unrelated_artists_deviation < FEATURES_THRESHOLD:
                 features_relevance.increment(feature_name)
 
+    return features_relevance
+
+
+def get_relevant_features(artists_db_main, artists_db_supp):
+    features_relevance = get_features_relevance(artists_db_main, artists_db_supp)
     result = []
     for feature_name in Features.get_features_list():
         relevance = getattr(features_relevance, feature_name)

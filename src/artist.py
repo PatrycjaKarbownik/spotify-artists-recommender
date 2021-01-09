@@ -28,7 +28,7 @@ class Artist:
 
         # if self.related_artists list is not enough long we should add more artists from spotify api query and
         # update supporting database
-        if len(related_artists) < 10:
+        if len(related_artists) < MINIMUM_RELATED_ARTISTS:
             return
 
         it = 0

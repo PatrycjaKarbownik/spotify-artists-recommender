@@ -14,4 +14,5 @@ def load_database(file_path):
 def calc_avg_track_features(artists_dbs):
     for artists_db in artists_dbs:
         for artist in artists_db.values():
-            artist.calc_avg_track_features()
+            if len(artist.tracks) > 0:
+                artist.calc_avg_track_features()

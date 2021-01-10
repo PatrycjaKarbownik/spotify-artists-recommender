@@ -1,11 +1,13 @@
+import statistics
+
 from src.track import Features
 
-FEATURES_THRESHOLD = -0.2
-ARTISTS_THRESHOLD = 0.7
+FEATURES_THRESHOLD = 0
+ARTISTS_THRESHOLD = 0.5
 
 
 def get_features_relevance(artists_db_main, artists_db_supp):
-    features_relevance = Features()
+    features_relevance, features_weights = Features(), Features()
 
     for artist in artists_db_main.values():
         related_artists, unrelated_artists = [], []
@@ -15,13 +17,13 @@ def get_features_relevance(artists_db_main, artists_db_supp):
             elif spotify_id in artists_db_supp:
                 related_artists.append(artists_db_supp[spotify_id])
             else:
-                print('[Artist with spotify_id {0} not found'.format(spotify_id))
+                continue
 
         for spotify_id in artist.unrelated_artists:
             if spotify_id in artists_db_main:
                 unrelated_artists.append(artists_db_main[spotify_id])
             else:
-                print('[Artist with spotify_id {0} not found'.format(spotify_id))
+                continue
 
         related_artists_features = calculate_features_deviations(artist, related_artists)
         unrelated_artists_features = calculate_features_deviations(artist, unrelated_artists)
@@ -29,19 +31,29 @@ def get_features_relevance(artists_db_main, artists_db_supp):
         for feature_name in Features.get_features_list():
             related_artists_deviation = getattr(related_artists_features, feature_name)
             unrelated_artists_deviation = getattr(unrelated_artists_features, feature_name)
-            if related_artists_deviation - unrelated_artists_deviation < FEATURES_THRESHOLD:
+            difference = related_artists_deviation - unrelated_artists_deviation
+            if difference < FEATURES_THRESHOLD:
                 features_relevance.increment(feature_name)
+                features_weights.add(feature_name, abs(difference))
 
-    return features_relevance
+    return features_relevance, features_weights
 
 
 def get_relevant_features(artists_db_main, artists_db_supp):
-    features_relevance = get_features_relevance(artists_db_main, artists_db_supp)
+    features_relevance, features_weights = get_features_relevance(artists_db_main, artists_db_supp)
     result = []
     for feature_name in Features.get_features_list():
         relevance = getattr(features_relevance, feature_name)
-        if relevance > ARTISTS_THRESHOLD:
-            result.append((feature_name, relevance))
+        weight = getattr(features_weights, feature_name)
+        artists_amount = len(artists_db_main)
+        percentage_relevance = relevance / artists_amount
+
+        if percentage_relevance >= ARTISTS_THRESHOLD:
+            w1 = weight / relevance
+            w2 = (percentage_relevance - 0.5) ** 2
+            grade = w1 * w2
+            result.append((feature_name, grade))
+            print(feature_name, ': w1 =', w1, "; w2 =", w2)
 
     return result
 
@@ -54,7 +66,7 @@ def calculate_features_deviations(artist, other_artists):
         main_artist_feature_avg = getattr(artist.avg_track_features, feature_name)
         feature_averages = [getattr(features_averages, feature_name) for features_averages in artists_features_averages]
         deviation_list = [calculate_deviation(main_artist_feature_avg, value) for value in feature_averages]
-        features_deviations[feature_name] = sum(deviation_list)
+        features_deviations[feature_name] = statistics.mean(deviation_list)
 
     return Features(**features_deviations)
 

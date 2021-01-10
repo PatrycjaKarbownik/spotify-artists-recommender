@@ -18,16 +18,17 @@ def connect_to_spotify():
 
 def get_artists_id_list(spotify, seed):
     print('Preparing database ' + str(datetime.now()))
-    seed_id = spotify.search(q=seed, type='artist')['artists']['items'][0]['id']
+    seed_artist = spotify.search(q=seed, type='artist')['artists']['items'][0]
     artists_db, queue = dict(), Queue()
+    artists_db[seed_artist['id']] = Artist(seed_artist['id'], seed_artist['name'], seed_artist['genres'])
 
-    queue.put(seed_id)
+    queue.put(seed_artist['id'])
     while queue.not_empty and len(artists_db) < DATABASE_SIZE:
         artist = queue.get()
         related_artists = spotify.artist_related_artists(artist)['artists']
         for artist in related_artists:
             if artist['id'] not in artists_db:
-                artists_db[artist['id']] = Artist(artist['id'], artist['name'])
+                artists_db[artist['id']] = Artist(artist['id'], artist['name'], artist['genres'])
                 queue.put(artist['id'])
 
     return artists_db

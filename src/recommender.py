@@ -20,6 +20,6 @@ def predict_recommendations(spotify, artist_name, artists_db, relevant_features)
     artists_similarities.sort(key=lambda tup: tup[0])
 
     for artist in artists_similarities[:REC_LIST_SIZE]:
-        rec.append(artist[1].name)
+        rec.append(artist[1])
 
     return rec

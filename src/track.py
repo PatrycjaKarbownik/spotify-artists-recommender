@@ -11,9 +11,9 @@ class Track:
 
 class Features:
     def __init__(self, **kwargs):
-        for feature_name in Features.get_features_list():
-            if feature_name not in kwargs:
-                print("{0} not defined".format(feature_name))
+        # for feature_name in Features.get_features_list():
+        #     if feature_name not in kwargs:
+        #         print("{0} not defined".format(feature_name))
 
         self.danceability = kwargs.get("danceability", 0)
         self.energy = kwargs.get("energy", 0)

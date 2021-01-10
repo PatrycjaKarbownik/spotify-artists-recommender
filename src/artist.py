@@ -5,12 +5,15 @@ from src.track import Features
 
 UNRELATED_ARTISTS = 20
 MINIMUM_RELATED_ARTISTS = 10
+SPOTIFY_ARTIST_LINK_TEMPLATE = 'https://open.spotify.com/artist/'
 
 
 class Artist:
-    def __init__(self, spotify_id, name):
+    def __init__(self, spotify_id, name, genres=None):
         self.spotify_id = spotify_id
+        self.spotify_link = SPOTIFY_ARTIST_LINK_TEMPLATE + spotify_id
         self.name = name
+        self.genres = genres
         self.tracks = []
         self.related_artists = []
         self.unrelated_artists = []
@@ -22,9 +25,9 @@ class Artist:
     def search_related_artists(self, spotify, artists_main_ids, artists_supp):
         related_artists = []
         for related in spotify.artist_related_artists(self.spotify_id)['artists']:
-            related_artists.append((related['id'], related['name']))
+            related_artists.append(Artist(related['id'], related['name'], related['genres']))
         # related artists based on main db and spotify api query
-        self.related_artists = list(set(artists_main_ids) & set([x[0] for x in related_artists]))
+        self.related_artists = list(set(artists_main_ids) & set([x.spotify_id for x in related_artists]))
 
         # if self.related_artists list is not enough long we should add more artists from spotify api query and
         # update supporting database
@@ -33,11 +36,11 @@ class Artist:
 
         it = 0
         while len(self.related_artists) < MINIMUM_RELATED_ARTISTS:
-            id, name = related_artists[it][0], related_artists[it][1]
-            if id not in self.related_artists:
-                self.related_artists.append(id)
-                if id not in artists_supp:
-                    artists_supp[id] = Artist(id, name)
+            related_artist = related_artists[it]
+            if related_artist.spotify_id not in self.related_artists:
+                self.related_artists.append(related_artist.spotify_id)
+                if related_artist.spotify_id not in artists_supp:
+                    artists_supp[related_artist.spotify_id] = related_artist
             it += 1
 
     def search_unrelated_artists(self, artists):

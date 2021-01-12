@@ -7,7 +7,7 @@ ARTISTS_THRESHOLD = 0.5
 
 
 def get_features_relevance(artists_db_main, artists_db_supp):
-    features_relevance, features_weights = Features(), Features()
+    features_relevance, features_weights = Features.get_zeros_features(), Features.get_zeros_features()
 
     for artist in artists_db_main.values():
         related_artists, unrelated_artists = [], []
@@ -64,7 +64,8 @@ def calculate_features_deviations(artist, other_artists):
 
     for feature_name in Features.get_features_list():
         main_artist_feature_avg = getattr(artist.avg_track_features, feature_name)
-        feature_averages = [getattr(features_averages, feature_name) for features_averages in artists_features_averages]
+        feature_averages = [getattr(features_averages, feature_name) for features_averages in artists_features_averages
+                            if getattr(features_averages, feature_name) is not None]
         deviation_list = [calculate_deviation(main_artist_feature_avg, value) for value in feature_averages]
         features_deviations[feature_name] = statistics.mean(deviation_list)
 

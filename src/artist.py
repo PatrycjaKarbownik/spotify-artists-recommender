@@ -3,7 +3,7 @@ from random import sample
 
 from src.track import Features
 
-UNRELATED_ARTISTS = 20
+UNRELATED_ARTISTS = 40
 MINIMUM_RELATED_ARTISTS = 10
 SPOTIFY_ARTIST_LINK_TEMPLATE = 'https://open.spotify.com/artist/'
 
@@ -59,7 +59,7 @@ class Artist:
         features_averages = {}
 
         for feature_name in Features.get_features_list():
-            feature_values = [getattr(features, feature_name) for features in track_features]
+            feature_values = [getattr(features, feature_name) for features in track_features if getattr(features, feature_name) is not None]
             features_averages[feature_name] = statistics.mean(feature_values)
 
         self.avg_track_features = Features(**features_averages)

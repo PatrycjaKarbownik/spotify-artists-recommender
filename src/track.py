@@ -11,20 +11,21 @@ class Track:
 
 class Features:
     def __init__(self, **kwargs):
-        # for feature_name in Features.get_features_list():
-        #     if feature_name not in kwargs:
-        #         print("{0} not defined".format(feature_name))
+        self.danceability = kwargs.get("danceability")
+        self.energy = kwargs.get("energy")
+        self.acousticness = kwargs.get("acousticness")
+        self.instrumentalness = kwargs.get("instrumentalness")
+        self.valence = kwargs.get("valence")
+        self.mode = kwargs.get("mode")
+        self.loudness = kwargs.get("loudness")
 
-        self.danceability = kwargs.get("danceability", 0)
-        self.energy = kwargs.get("energy", 0)
-        self.acousticness = kwargs.get("acousticness", 0)
-        self.instrumentalness = kwargs.get("instrumentalness", 0)
-        self.valence = kwargs.get("valence", 0)
-        self.loudness = kwargs.get("loudness", 0) / MAX_LOUDNESS_VALUE
-        self.mode = kwargs.get("mode", 0)
+        temporary_tempo = kwargs.get("tempo")
 
-        temporary_tempo = kwargs.get("tempo", 0) / MAX_TEMPO_VALUE
-        self.tempo = 1 if temporary_tempo > 1 else temporary_tempo
+        if self.loudness is not None:
+            self.loudness = self.loudness / MAX_LOUDNESS_VALUE
+        if temporary_tempo is not None:
+            temporary_tempo = temporary_tempo / MAX_TEMPO_VALUE
+            self.tempo = 1 if temporary_tempo > 1 else temporary_tempo
 
     def increment(self, name):
         """Increments a counter specified by the 'name' argument."""
@@ -39,3 +40,10 @@ class Features:
         return [
             "danceability", "energy", "acousticness", "instrumentalness", "valence", "loudness", "mode", "tempo"
         ]
+
+    @staticmethod
+    def get_zeros_features():
+        f = Features()
+        for feature_name in Features.get_features_list():
+            setattr(f, feature_name, 0)
+        return f

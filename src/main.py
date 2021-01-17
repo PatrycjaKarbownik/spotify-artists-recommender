@@ -36,8 +36,11 @@ if __name__ == '__main__':
     while True:
         artist_name = input('Enter artist name (or press Enter to exit): ')
         if artist_name:
-            recommendations = predict_recommendations(spotify, artist_name, db_all, relevant_features)
-            for artist in recommendations:
-                print(artist.spotify_link, artist.name, ':', 'genres =', artist.genres)
+            try:
+                recommendations = predict_recommendations(spotify, artist_name, db_all, relevant_features)
+                for artist in recommendations:
+                    print(artist.spotify_link, artist.name, ':', 'genres =', artist.genres)
+            except:
+                print(artist_name, 'not found')
         else:
             break

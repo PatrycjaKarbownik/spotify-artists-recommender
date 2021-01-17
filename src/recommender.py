@@ -1,5 +1,5 @@
-from src.similarities import calculate_deviation_between_two_artists
-from src.spotify import prepare_artist_profile
+from similarities import calculate_deviation_between_two_artists
+from spotify import prepare_artist_profile
 
 REC_LIST_SIZE = 10
 

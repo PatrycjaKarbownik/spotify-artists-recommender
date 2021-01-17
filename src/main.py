@@ -1,11 +1,11 @@
 import os
 from datetime import datetime
 
-from src.artist import MINIMUM_RELATED_ARTISTS
-from src.recommender import predict_recommendations
-from src.similarities import get_relevant_features
-from src.spotify import connect_to_spotify, get_artists_id_list, add_tracks, add_related_and_unrelated_artists
-from src.utils import load_database, save_database, calc_avg_track_features
+from artist import MINIMUM_RELATED_ARTISTS
+from recommender import predict_recommendations
+from similarities import get_relevant_features
+from spotify import connect_to_spotify, get_artists_id_list, add_tracks, add_related_and_unrelated_artists
+from utils import load_database, save_database, calc_avg_track_features
 
 ARTISTS_DB_PATH_MAIN, ARTISTS_DB_PATH_SUPP = "artists_db/db_main", "artists_db/db_supp"
 

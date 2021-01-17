@@ -9,7 +9,7 @@ from artist import Artist
 from track import Track
 
 NUMBER_OF_TOP_TRACKS = 10
-DATABASE_SIZE = 60
+DATABASE_SIZE = 100
 
 
 def connect_to_spotify():

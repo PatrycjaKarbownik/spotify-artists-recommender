@@ -1,6 +1,6 @@
 .idea/
 artists_db/
-config.py
+src/config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

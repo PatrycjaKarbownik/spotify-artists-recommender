@@ -1,7 +1,7 @@
 import statistics
 from random import sample
 
-from src.track import Features
+from track import Features
 
 UNRELATED_ARTISTS = 40
 MINIMUM_RELATED_ARTISTS = 10

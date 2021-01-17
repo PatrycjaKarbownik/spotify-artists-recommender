@@ -1,6 +1,6 @@
 import statistics
 
-from src.track import Features
+from track import Features
 
 FEATURES_THRESHOLD = 0
 ARTISTS_THRESHOLD = 0.5
